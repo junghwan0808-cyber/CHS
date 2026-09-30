@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prediger Mini Experience - Color Grouped</title>
+    <style>
+      :root {
+        --bg: #f6f2ec;
+        --panel: #fffdfb;
+        --text: #20252a;
+        --muted: #59616d;
+        --border: rgba(41, 48, 58, 0.08);
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background: linear-gradient(180deg, #f5efe7 0%, #efe4d6 100%);
+        color: var(--text);
+      }
+
+      .container {
+        max-width: 1080px;
+        margin: 48px auto;
+        padding: 0 20px 40px;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+      }
+
+      .brand {
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      .page-tag {
+        background: rgba(255,255,255,0.5);
+        border: 1px solid var(--border);
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+
+      .hero {
+        background: rgba(255,255,255,0.55);
+        border: 1px solid var(--border);
+        box-shadow: 0 18px 42px rgba(37, 32, 20, 0.09);
+        border-radius: 30px;
+        padding: 30px;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2.1rem, 5vw, 4rem);
+        line-height: 1.05;
+      }
+
+      .subtitle {
+        margin: 0 0 26px;
+        color: var(--muted);
+        font-size: 1.08rem;
+        max-width: 60ch;
+      }
+
+      .group-list {
+        display: grid;
+        gap: 18px;
+      }
+
+      .group {
+        background: rgba(255,255,255,0.45);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 18px;
+      }
+
+      .group-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .group-name {
+        font-size: 1.05rem;
+        font-weight: 700;
+      }
+
+      .group-meta {
+        color: var(--muted);
+        font-size: 0.75rem;
+      }
+
+      .swatches {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .swatch {
+        width: 96px;
+        height: 96px;
+        border-radius: 22px;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+      }
+
+      .swatch:hover,
+      .swatch.active {
+        transform: translateY(-2px);
+        border-color: rgba(17,17,17,0.8);
+      }
+
+      .selected {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-top: 22px;
+        padding-top: 18px;
+        border-top: 1px solid var(--border);
+      }
+
+      .sample {
+        width: 120px;
+        height: 120px;
+        border-radius: 26px;
+        background: linear-gradient(135deg, #f0ae7a, #d66b4d);
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+      }
+
+      .selected-text strong {
+        display: block;
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+      }
+
+      .selected-text span {
+        color: var(--muted);
+        letter-spacing: 0.08em;
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 680px) {
+        .header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+
+        .swatch {
+          width: 74px;
+          height: 74px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="brand">Prediger</div>
+        <div class="page-tag">Color Grouped</div>
+      </div>
+
+      <section class="hero">
+        <h1>Choose a palette that matches your story.</h1>
+        <p class="subtitle">
+          Each button below groups colors by a feeling and mood so you can compare options quickly.
+        </p>
+
+        <div class="group-list" id="groupList"></div>
+
+        <div class="selected">
+          <div class="sample" id="selectedSample"></div>
+          <div class="selected-text">
+            <strong id="selectedName">Sunset Coral</strong>
+            <span id="selectedHex">#F0AE7A</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const palette = [
+        {
+          name: 'Warm Sunset',
+          colors: [
+            { name: 'Sunset Coral', hex: '#F0AE7A' },
+            { name: 'Roasted Peach', hex: '#F7C59F' },
+            { name: 'Terracotta', hex: '#D66B4D' },
+            { name: 'Burnt Clay', hex: '#9E4D3C' }
+          ]
+        },
+        {
+          name: 'Fresh Garden',
+          colors: [
+            { name: 'Sage Mist', hex: '#C9D7C5' },
+            { name: 'Botanical', hex: '#6E9B7A' },
+            { name: 'Pine', hex: '#375D4A' },
+            { name: 'Verdant', hex: '#1E4F3A' }
+          ]
+        },
+        {
+          name: 'Midnight Ink',
+          colors: [
+            { name: 'Ice Blue', hex: '#DDEBFF' },
+            { name: 'Cloudy Blue', hex: '#A2B9D9' },
+            { name: 'Slate', hex: '#475B7A' },
+            { name: 'Midnight', hex: '#1D2C45' }
+          ]
+        },
+        {
+          name: 'Neutral Studio',
+          colors: [
+            { name: 'Stone', hex: '#E9E2D8' },
+            { name: 'Sand', hex: '#D1BDA5' },
+            { name: 'Walnut', hex: '#7C5A45' },
+            { name: 'Espresso', hex: '#45312A' }
+          ]
+        }
+      ];
+
+      const groupList = document.getElementById('groupList');
+      const selectedSample = document.getElementById('selectedSample');
+      const selectedName = document.getElementById('selectedName');
+      const selectedHex = document.getElementById('selectedHex');
+
+      function updateSelection(color) {
+        selectedSample.style.background = `linear-gradient(135deg, ${color.hex}, ${shade(color.hex, -18)})`;
+        selectedName.textContent = color.name;
+        selectedHex.textContent = color.hex;
+      }
+
+      function shade(hex, amount) {
+        const value = hex.replace('#', '');
+        const num = parseInt(value, 16);
+        const r = clamp(((num >> 16) & 0xff) + amount);
+        const g = clamp(((num >> 8) & 0xff) + amount);
+        const b = clamp((num & 0xff) + amount);
+        return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+      }
+
+      function clamp(value) {
+        return Math.min(255, Math.max(0, value));
+      }
+
+      function render() {
+        const first = palette[0].colors[0];
+        updateSelection(first);
+
+        groupList.innerHTML = palette.map(group => `
+          <div class="group">
+            <div class="group-head">
+              <div class="group-name">${group.name}</div>
+              <div class="group-meta">${group.colors.length} tones</div>
+            </div>
+            <div class="swatches">
+              ${group.colors.map(color => `
+                <button
+                  class="swatch${color.hex === first.hex ? ' active' : ''}"
+                  type="button"
+                  style="background:${color.hex}"
+                  data-name="${color.name}"
+                  data-hex="${color.hex}"
+                  aria-label="Select ${color.name}"
+                ></button>
+              `).join('')}
+            </div>
+          </div>
+        `).join('');
+
+        document.querySelectorAll('.swatch').forEach(button => {
+          button.addEventListener('click', () => {
+            document.querySelectorAll('.swatch').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            updateSelection({ name: button.dataset.name, hex: button.dataset.hex });
+          });
+        });
+      }
+
+      render();
+    </script>
+  </body>
+</html>
